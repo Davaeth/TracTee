@@ -1,3 +1,13 @@
+.gradle
+.idea
+.DS_Store
+build
+captures
+.externalNativeBuild
+.cxx
+xcuserdata
+bin/
+
 # Gradle files
 .gradle/
 build/
@@ -31,3 +41,12 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Xcode
+
+## User settings
+xcuserdata/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
