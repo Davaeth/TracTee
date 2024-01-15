@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,11 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import java.text.SimpleDateFormat
+import com.davaeth.tractee.utils.toDisplayable
 import java.time.Instant
 import java.util.Date
 import java.util.Timer
 import kotlin.concurrent.timer
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
@@ -31,7 +32,7 @@ fun TimeDashboard() {
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun SingleTimer() {
-    val currentTime = remember { mutableLongStateOf(0L) }
+    val currentTime = remember { mutableStateOf(Duration.ZERO) }
     var currentTimer: Timer? = null
 
     Row(
@@ -40,7 +41,7 @@ private fun SingleTimer() {
         modifier = Modifier.padding(all = 16.dp)
     ) {
         Text(
-            text = SimpleDateFormat.getTimeInstance().format(currentTime.longValue),
+            text = currentTime.value.toDisplayable(),
             fontSize = TextUnit(24f, TextUnitType.Sp)
         )
 
@@ -48,14 +49,15 @@ private fun SingleTimer() {
             onClick = {
                 currentTimer = timer(
                     startAt = Date.from(Instant.now()),
-                    period = 1.seconds.toLong(DurationUnit.SECONDS),
-                    action = { currentTime.longValue += 1.seconds.toLong(DurationUnit.SECONDS) })
+                    period = 1.seconds.toLong(DurationUnit.MILLISECONDS),
+                    action = { currentTime.value = currentTime.value.plus(1.seconds) })
             },
         ) {
             Text(text = "Start")
         }
         Button(
             onClick = {
+                currentTimer?.purge()
                 currentTimer?.cancel()
                 currentTimer = null
             },
