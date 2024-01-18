@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,25 +16,28 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.davaeth.tractee.utils.toDisplayable
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.util.Timer
+import kotlin.concurrent.timerTask
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 @Stable
-class ComposeTimer {
-    private var running: Boolean = false
+class ReschedulingTimer {
+    private var running: Timer? = Timer()
 
-    suspend fun schedule(period: Duration = 1.seconds, action: () -> Unit) {
-        running = true
-        while (running) {
-            delay(period)
-            action()
-        }
+    fun schedule(period: Duration = 1.seconds, action: () -> Unit) {
+        running = running ?: Timer()
+        running?.schedule(
+            timerTask { action() },
+            0L,
+            period.toLong(DurationUnit.MILLISECONDS),
+        )
     }
 
     fun stop() {
-        running = false
+        running?.cancel()
+        running = null
     }
 }
 
@@ -49,8 +51,7 @@ fun TimeDashboard() {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun SingleTimer() {
     val currentTime = remember { mutableStateOf(Duration.ZERO) }
-    val currentTimer: ComposeTimer = remember { ComposeTimer() }
-    val coroutineScope = rememberCoroutineScope()
+    val currentTimer: ReschedulingTimer = remember { ReschedulingTimer() }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -64,20 +65,14 @@ private fun SingleTimer() {
 
         Button(
             onClick = {
-                coroutineScope.launch {
-                    currentTimer.schedule(1.seconds) {
-                        currentTime.value = currentTime.value.plus(1.seconds)
-                    }
+                currentTimer.schedule {
+                    currentTime.value = currentTime.value.plus(1.seconds)
                 }
             },
         ) {
             Text(text = "Start")
         }
-        Button(
-            onClick = {
-                currentTimer.stop()
-            },
-        ) {
+        Button(onClick = currentTimer::stop) {
             Text(text = "Stop")
         }
     }
