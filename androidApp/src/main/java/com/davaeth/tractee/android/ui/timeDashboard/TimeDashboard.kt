@@ -1,4 +1,4 @@
-package com.davaeth.tractee.android.ui
+package com.davaeth.tractee.android.ui.timeDashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,18 +16,18 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.davaeth.tractee.utils.ReschedulingTimer
 import com.davaeth.tractee.utils.toDisplayable
+import org.koin.androidx.compose.koinViewModel
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-
 fun TimeDashboard() {
     SingleTimer()
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-private fun SingleTimer() {
+private fun SingleTimer(viewModel: TimeDashboardViewModel = koinViewModel()) {
     val currentTime = remember { mutableStateOf(Duration.ZERO) }
     val currentTimer = remember { ReschedulingTimer() }
 

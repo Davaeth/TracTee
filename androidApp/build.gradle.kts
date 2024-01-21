@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -46,6 +47,12 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+
+    // Navigation
+    implementation(libs.compose.navigation)
+
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compose)
 
     implementation(libs.androidx.activity.compose)
 
