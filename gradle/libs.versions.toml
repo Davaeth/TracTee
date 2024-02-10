@@ -1,7 +1,6 @@
 [versions]
 ksp = "1.9.22-1.0.17"
 agp = "8.2.1"
-koinVersion = "3.5.3"
 kotlin = "1.9.22"
 compose-compiler = "1.5.8"
 androidx-activityCompose = "1.8.2"
@@ -13,6 +12,7 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 compose-navigation = "2.7.6"
 koin = "3.5.3"
+sqldelight = "2.0.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -34,6 +34,10 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-android-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 
+# SQLDelight
+cash-sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+cash-sqldelight-primitive = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
+
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -47,3 +51,4 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+cash-sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

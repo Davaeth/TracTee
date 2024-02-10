@@ -10,10 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.davaeth.tractee.repository.DriverFactory
+import com.davaeth.tractee.repository.timer.TimerManager
 import com.davaeth.tractee.utils.ReschedulingTimer
 import com.davaeth.tractee.utils.toDisplayable
 import org.koin.androidx.compose.koinViewModel
@@ -41,8 +44,10 @@ private fun SingleTimer(viewModel: TimeDashboardViewModel = koinViewModel()) {
             fontSize = TextUnit(24f, TextUnitType.Sp)
         )
 
+        val context = LocalContext.current
         Button(
             onClick = {
+                TimerManager(DriverFactory(context)).insertTimer()
                 currentTimer.schedule {
                     currentTime.value = currentTime.value.plus(1.seconds)
                 }

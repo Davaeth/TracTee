@@ -1,0 +1,13 @@
+CREATE TABLE timer (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    time REAL NOT NULL,
+    title TEXT
+);
+
+insertTimer:
+INSERT INTO timer (time, title)
+VALUES (?, ?);
+
+selectAll:
+SELECT *
+FROM timer;

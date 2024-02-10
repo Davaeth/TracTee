@@ -1,6 +1,15 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.cash.sqldelight)
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName = "com.davaeth"
+        }
+    }
 }
 
 kotlin {
@@ -27,12 +36,13 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.koin.core)
             implementation(libs.koin.test)
+            implementation(libs.cash.sqldelight.primitive)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         androidMain.dependencies {
-
+            implementation(libs.cash.sqldelight.android)
         }
     }
 }

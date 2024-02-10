@@ -1,4 +1,4 @@
-package com.davaeth.tractee.domain.simple
+package com.davaeth.tractee.domain.common
 
 import kotlin.jvm.JvmInline
 
