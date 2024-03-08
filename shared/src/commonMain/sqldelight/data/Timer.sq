@@ -8,6 +8,12 @@ insertTimer:
 INSERT INTO timer (time, title)
 VALUES (?, ?);
 
+getNewestTimer:
+SELECT *
+FROM timer
+ORDER BY id
+LIMIT 1;
+
 selectAll:
 SELECT *
 FROM timer;

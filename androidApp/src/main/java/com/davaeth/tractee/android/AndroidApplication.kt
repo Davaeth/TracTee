@@ -1,6 +1,8 @@
 package com.davaeth.tractee.android
 
 import android.app.Application
+import com.davaeth.tractee.android.ui.di.domainModule
+import com.davaeth.tractee.android.ui.di.repositoryModule
 import com.davaeth.tractee.android.ui.di.uiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -15,7 +17,7 @@ class AndroidApplication : Application() {
         startKoin {
             androidContext(this@AndroidApplication)
             androidLogger(Level.DEBUG)
-            modules(uiModule)
+            modules(uiModule, repositoryModule, domainModule)
         }
     }
 }

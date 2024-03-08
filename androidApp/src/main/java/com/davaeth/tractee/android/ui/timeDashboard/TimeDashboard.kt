@@ -9,41 +9,50 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.davaeth.tractee.domain.common.Id
+import com.davaeth.tractee.utils.ExceptedReschedulingTimer
 import com.davaeth.tractee.utils.toDisplayable
 import org.koin.androidx.compose.koinViewModel
+import java.util.Timer
 
 @Composable
-fun TimeDashboard() {
-    val viewModel: TimeDashboardViewModel = koinViewModel()
-    with(viewModel) {
-        SingleTimer()
+fun TimeDashboard(viewModel: TimeDashboardViewModel = koinViewModel()) {
+    val stateListener = viewModel.state.collectAsState().value
+
+    if (stateListener.timers.isEmpty()) viewModel.addTimer()
+
+    stateListener.timers.forEach { timer ->
+        SingleTimer(
+            timer = timer,
+            startTimer = viewModel::startTimer,
+            stopTimer = viewModel::stopTimer
+        )
     }
 }
 
-context (TimeDashboardState)
 @Composable
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-private fun SingleTimer() {
-    val stateListener = state.collectAsState().value
-
+private fun SingleTimer(
+    timer: ExceptedReschedulingTimer<Timer>,
+    startTimer: (Id) -> Unit,
+    stopTimer: (Id) -> Unit,
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(all = 16.dp)
     ) {
         Text(
-            text = stateListener.timers.first().currentTime.toDisplayable(),
+            text = timer.currentTime.toDisplayable(),
             fontSize = TextUnit(24f, TextUnitType.Sp)
         )
 
-        Button(onClick = { startTimer(stateListener.timers.first().id) }) {
+        Button(onClick = { startTimer(timer.id) }) {
             Text(text = "Start")
         }
-        Button(onClick = { stopTimer(stateListener.timers.first().id) }) {
+        Button(onClick = { stopTimer(timer.id) }) {
             Text(text = "Stop")
         }
     }

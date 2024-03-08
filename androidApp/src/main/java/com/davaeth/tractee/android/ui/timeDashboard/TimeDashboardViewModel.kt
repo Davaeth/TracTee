@@ -5,14 +5,16 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davaeth.tractee.domain.common.Id
+import com.davaeth.tractee.domain.useCases.CreateTimerUseCase
 import com.davaeth.tractee.utils.ExceptedReschedulingTimer
-import com.davaeth.tractee.utils.ReschedulingTimer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.Timer
 
-class TimeDashboardViewModel : ViewModel(), TimeDashboardState {
+class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase) : ViewModel(),
+    TimeDashboardState {
     private val timers = mutableStateListOf<ExceptedReschedulingTimer<Timer>>()
 
     private val _state = snapshotFlow { TimeDashboardState.State(timers = timers) }
@@ -23,13 +25,19 @@ class TimeDashboardViewModel : ViewModel(), TimeDashboardState {
     )
 
     override fun addTimer() {
-        timers.add(ReschedulingTimer(Id(timers.lastIndex + 1L)))
+        viewModelScope.launch {
+            createTimerUseCase()
+                .onSuccess { timers.add(it) }
+                .onFailure { /* Failure handling */ }
+        }
     }
 
     override fun startTimer(timerId: Id) {
         timers.first { it.id == timerId }
             .schedule { timer ->
-                timers[timers.indexOfFirst { it.id == timerId }] = timer
+                val index = timers.indexOfFirst { it.id == timerId }
+                timers.removeAt(index)
+                timers.add(index, timer)
             }
     }
 
