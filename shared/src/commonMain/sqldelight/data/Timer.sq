@@ -11,7 +11,7 @@ VALUES (?, ?);
 getNewestTimer:
 SELECT *
 FROM timer
-ORDER BY id
+ORDER BY id DESC
 LIMIT 1;
 
 selectAll:
