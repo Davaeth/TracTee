@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="a11y_single_timer_play">Uruchom licznik</string>
+    <string name="a11y_single_timer_stop">Zatrzymaj licznik</string>
+    <string name="a11y_single_timer_delete">Usuń licznik</string>
+</resources>

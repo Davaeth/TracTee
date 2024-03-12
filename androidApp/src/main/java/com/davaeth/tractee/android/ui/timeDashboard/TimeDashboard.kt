@@ -1,17 +1,31 @@
 package com.davaeth.tractee.android.ui.timeDashboard
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.davaeth.tractee.android.R
 import com.davaeth.tractee.domain.common.Id
 import com.davaeth.tractee.utils.ExceptedReschedulingTimer
 import com.davaeth.tractee.utils.toDisplayable
@@ -22,14 +36,32 @@ import java.util.Timer
 fun TimeDashboard(viewModel: TimeDashboardViewModel = koinViewModel()) {
     val stateListener = viewModel.state.collectAsState().value
 
-    if (stateListener.timers.isEmpty()) viewModel.addTimer()
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.Center)
+        ) {
+            items(items = stateListener.timers.reversed(), key = { it.id.value }) { timer ->
+                SingleTimer(
+                    timer = timer,
+                    startTimer = viewModel::startTimer,
+                    stopTimer = viewModel::stopTimer
+                )
+            }
+        }
 
-    stateListener.timers.forEach { timer ->
-        SingleTimer(
-            timer = timer,
-            startTimer = viewModel::startTimer,
-            stopTimer = viewModel::stopTimer
-        )
+        FloatingActionButton(
+            onClick = viewModel::addTimer,
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 16.dp, end = 16.dp)
+        ) {
+            Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
+        }
     }
 }
 
@@ -40,20 +72,25 @@ private fun SingleTimer(
     stopTimer: (Id) -> Unit,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(all = 16.dp)
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = timer.currentTime.toDisplayable(),
             fontSize = TextUnit(24f, TextUnitType.Sp)
         )
 
-        Button(onClick = { startTimer(timer.id) }) {
-            Text(text = "Start")
+        IconButton(onClick = { startTimer(timer.id) }, modifier = Modifier.padding(start = 16.dp)) {
+            Icon(
+                imageVector = Icons.Outlined.PlayArrow,
+                contentDescription = stringResource(id = R.string.a11y_single_timer_play)
+            )
         }
-        Button(onClick = { stopTimer(timer.id) }) {
-            Text(text = "Stop")
+        IconButton(onClick = { stopTimer(timer.id) }) {
+            Icon(
+                imageVector = Icons.Filled.Clear,
+                contentDescription = stringResource(id = R.string.a11y_single_timer_stop)
+            )
         }
     }
 }
