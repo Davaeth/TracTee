@@ -7,16 +7,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davaeth.tractee.domain.common.Id
 import com.davaeth.tractee.domain.useCases.CreateTimerUseCase
-import com.davaeth.tractee.utils.ExceptedReschedulingTimer
+import com.davaeth.tractee.domain.useCases.RetrieveTimersUseCase
+import com.davaeth.tractee.utils.ExpectedReschedulingTimer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Timer
 
-class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase) : ViewModel(),
-    TimeDashboardState {
-    private val timers = mutableStateListOf<ExceptedReschedulingTimer<Timer>>()
+class TimeDashboardViewModel(
+    private val createTimerUseCase: CreateTimerUseCase,
+    private val retrieveTimersUseCase: RetrieveTimersUseCase,
+) : ViewModel(), TimeDashboardState {
+    private val timers = mutableStateListOf<ExpectedReschedulingTimer<Timer>>()
 
     private val _state = snapshotFlow { TimeDashboardState.State(timers = timers) }
     override val state: StateFlow<TimeDashboardState.State> = _state.stateIn(
@@ -24,6 +27,14 @@ class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase)
         SharingStarted.Eagerly,
         TimeDashboardState.State.createInitial()
     )
+
+    init {
+        viewModelScope.launch {
+            retrieveTimersUseCase()
+                .onSuccess { timers.addAll(it) }
+                .onFailure { /* Error handling */ }
+        }
+    }
 
     override fun addTimer() {
         viewModelScope.launch {
@@ -48,9 +59,9 @@ class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase)
     }
 }
 
-private fun SnapshotStateList<ExceptedReschedulingTimer<Timer>>.update(
+private fun SnapshotStateList<ExpectedReschedulingTimer<Timer>>.update(
     idToChange: Id,
-    newItem: ExceptedReschedulingTimer<Timer>,
+    newItem: ExpectedReschedulingTimer<Timer>,
 ) {
     val index = indexOfFirst { it.id == idToChange }
     removeAt(index)

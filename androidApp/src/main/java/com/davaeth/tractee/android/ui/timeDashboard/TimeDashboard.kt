@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.davaeth.tractee.android.R
 import com.davaeth.tractee.domain.common.Id
-import com.davaeth.tractee.utils.ExceptedReschedulingTimer
+import com.davaeth.tractee.utils.ExpectedReschedulingTimer
 import com.davaeth.tractee.utils.toDisplayable
 import org.koin.androidx.compose.koinViewModel
 import java.util.Timer
@@ -67,7 +67,7 @@ fun TimeDashboard(viewModel: TimeDashboardViewModel = koinViewModel()) {
 
 @Composable
 private fun SingleTimer(
-    timer: ExceptedReschedulingTimer<Timer>,
+    timer: ExpectedReschedulingTimer<Timer>,
     startTimer: (Id) -> Unit,
     stopTimer: (Id) -> Unit,
 ) {

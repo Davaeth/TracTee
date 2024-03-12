@@ -3,8 +3,7 @@ package com.davaeth.tractee.domain.useCases
 import com.davaeth.tractee.domain.ReschedulingTimer
 import com.davaeth.tractee.domain.common.Id
 import com.davaeth.tractee.repository.timer.TimerManager
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import com.davaeth.tractee.utils.toDuration
 
 class CreateTimerUseCase(private val timeManager: TimerManager) {
     suspend operator fun invoke(): Result<ReschedulingTimer> = runCatching {
@@ -14,7 +13,7 @@ class CreateTimerUseCase(private val timeManager: TimerManager) {
             .let {
                 ReschedulingTimer(
                     Id(it.id),
-                    it.time.toDuration(DurationUnit.MILLISECONDS),
+                    it.time.toDuration(),
                 )
             }
     }

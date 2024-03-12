@@ -1,19 +1,19 @@
-CREATE TABLE timer (
+CREATE TABLE TimerEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     time REAL NOT NULL,
     title TEXT
 );
 
 insertTimer:
-INSERT INTO timer (time, title)
+INSERT INTO TimerEntity (time, title)
 VALUES (?, ?);
 
 getNewestTimer:
 SELECT *
-FROM timer
+FROM TimerEntity
 ORDER BY id DESC
 LIMIT 1;
 
-selectAll:
+retrieveTimers:
 SELECT *
-FROM timer;
+FROM TimerEntity;

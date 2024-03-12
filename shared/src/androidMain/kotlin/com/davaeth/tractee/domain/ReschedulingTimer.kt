@@ -1,14 +1,14 @@
 package com.davaeth.tractee.domain
 
 import com.davaeth.tractee.domain.common.Id
-import com.davaeth.tractee.utils.ExceptedReschedulingTimer
+import com.davaeth.tractee.utils.ExpectedReschedulingTimer
 import java.util.Timer
 import kotlin.concurrent.timerTask
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
-class ReschedulingTimer(id: Id, currentTime: Duration) : ExceptedReschedulingTimer<Timer> {
+class ReschedulingTimer(id: Id, currentTime: Duration) : ExpectedReschedulingTimer<Timer> {
     override val id: Id
     override var timer: Timer? = null
     override var currentTime: Duration = Duration.ZERO
@@ -18,7 +18,7 @@ class ReschedulingTimer(id: Id, currentTime: Duration) : ExceptedReschedulingTim
         this.currentTime = currentTime
     }
 
-    override fun schedule(period: Duration, action: (ExceptedReschedulingTimer<Timer>) -> Unit) {
+    override fun schedule(period: Duration, action: (ExpectedReschedulingTimer<Timer>) -> Unit) {
         timer?.let { return }
 
         timer = Timer()
