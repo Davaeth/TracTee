@@ -1,4 +1,4 @@
-package com.davaeth.tractee.android
+package com.davaeth.tractee.android.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape

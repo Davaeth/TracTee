@@ -2,6 +2,7 @@ package com.davaeth.tractee.android.ui.timeDashboard
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davaeth.tractee.domain.common.Id
@@ -33,12 +34,9 @@ class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase)
     }
 
     override fun startTimer(timerId: Id) {
-        timers.first { it.id == timerId }
-            .schedule { timer ->
-                val index = timers.indexOfFirst { it.id == timerId }
-                timers.removeAt(index)
-                timers.add(index, timer)
-            }
+        timers
+            .first { it.id == timerId }
+            .schedule { timer -> timers.update(timerId, timer) }
     }
 
     override fun stopTimer(timerId: Id) {
@@ -48,4 +46,13 @@ class TimeDashboardViewModel(private val createTimerUseCase: CreateTimerUseCase)
     override fun deleteTimer(timerId: Id) {
         timers.removeIf { it.id == timerId }
     }
+}
+
+private fun SnapshotStateList<ExceptedReschedulingTimer<Timer>>.update(
+    idToChange: Id,
+    newItem: ExceptedReschedulingTimer<Timer>,
+) {
+    val index = indexOfFirst { it.id == idToChange }
+    removeAt(index)
+    add(index, newItem)
 }
