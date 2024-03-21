@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.koin.test)
             implementation(libs.cash.sqldelight.primitive)
             implementation(libs.coroutines.core)
+            implementation(libs.coroutines.extensions)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -8,3 +8,6 @@ value class Id(val value: Long) {
         require(value >= 0) { "Id cannot be null!" }
     }
 }
+
+val Id.databaseValue
+    get() = value.toString()

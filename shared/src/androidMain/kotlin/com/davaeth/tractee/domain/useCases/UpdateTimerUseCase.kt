@@ -6,6 +6,6 @@ import com.davaeth.tractee.utils.value
 
 class UpdateTimerUseCase(private val timerManager: TimerManager) {
     suspend operator fun invoke(timer: ExpectedReschedulingTimer<*>) = runCatching {
-        timerManager.updateTimer(timer.currentTime.value, "", timer.id.value)
+        timerManager.updateTimer(timer.currentTime.value, "", timer.id)
     }
 }

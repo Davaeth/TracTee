@@ -8,17 +8,15 @@ insertTimer:
 INSERT INTO TimerEntity (time, title)
 VALUES (?, ?);
 
-getNewestTimer:
-SELECT *
-FROM TimerEntity
-ORDER BY id DESC
-LIMIT 1;
-
-retrieveTimers:
+listenForTimers:
 SELECT *
 FROM TimerEntity;
 
 updateTimer:
 UPDATE TimerEntity
 SET time = ?, title = ?
+WHERE id LIKE ?;
+
+deleteTimer:
+DELETE FROM TimerEntity
 WHERE id LIKE ?;

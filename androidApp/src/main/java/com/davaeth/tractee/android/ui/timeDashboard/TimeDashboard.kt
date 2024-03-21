@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.FloatingActionButton
@@ -48,7 +49,8 @@ fun TimeDashboard(viewModel: TimeDashboardViewModel = koinViewModel()) {
                 SingleTimer(
                     timer = timer,
                     startTimer = viewModel::startTimer,
-                    stopTimer = viewModel::stopTimer
+                    stopTimer = viewModel::stopTimer,
+                    deleteTimer = viewModel::deleteTimer
                 )
             }
         }
@@ -70,6 +72,7 @@ private fun SingleTimer(
     timer: ExpectedReschedulingTimer<Timer>,
     startTimer: (Id) -> Unit,
     stopTimer: (Id) -> Unit,
+    deleteTimer: (Id) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,

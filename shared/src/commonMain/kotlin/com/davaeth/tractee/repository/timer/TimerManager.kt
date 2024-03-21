@@ -1,39 +1,47 @@
 package com.davaeth.tractee.repository.timer
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import com.davaeth.Database
+import com.davaeth.tractee.domain.common.Id
+import com.davaeth.tractee.domain.common.databaseValue
 import com.davaeth.tractee.repository.DriverFactory
 import com.davaeth.tractee.repository.createDatabase
 import data.TimerEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class TimerManager(private val driverFactory: DriverFactory) {
-    suspend fun insertTimer() =
+class TimerManager(driverFactory: DriverFactory) {
+    private val database: Database = createDatabase(driverFactory)
+
+    val timersListener: Flow<List<TimerEntity>>
+        get() = database
+            .timerQueries
+            .listenForTimers()
+            .asFlow()
+            .mapToList(Dispatchers.IO)
+
+    suspend fun insertTimer(): Unit =
         withContext(Dispatchers.IO) {
-            val database = createDatabase(driverFactory)
             database.timerQueries.insertTimer(0, null)
         }
 
-    suspend fun getNewestTimer(): Result<TimerEntity> = withContext(Dispatchers.IO) {
-        val database = createDatabase(driverFactory)
-        database.timerQueries.getNewestTimer().executeAsOneOrNull()?.let { Result.success(it) }
-            ?: Result.failure(NullPointerException("There are no timer in the database!"))
-    }
-
-    suspend fun retrieveTimers(): Result<List<TimerEntity>> = withContext(Dispatchers.IO) {
-        runCatching {
-            val database = createDatabase(driverFactory)
-            database.timerQueries
-                .retrieveTimers()
-                .executeAsList()
-        }
-    }
-
-    suspend fun updateTimer(time: Long, title: String, id: Long): Result<Unit> =
+    suspend fun updateTimer(time: Long, title: String, id: Id): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
-                val database = createDatabase(driverFactory)
-                database.timerQueries.updateTimer(time, title, id.toString())
+                database
+                    .timerQueries
+                    .updateTimer(time, title, id.databaseValue)
             }
         }
+
+    suspend fun deleteTimer(id: Id) = withContext(Dispatchers.IO) {
+        runCatching {
+            database
+                .timerQueries
+                .deleteTimer(id.databaseValue)
+        }
+    }
 }

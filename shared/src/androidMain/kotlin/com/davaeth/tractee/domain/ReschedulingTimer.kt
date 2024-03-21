@@ -31,10 +31,12 @@ class ReschedulingTimer(id: Id, currentTime: Duration) : ExpectedReschedulingTim
             /* delay = */ 0L,
             /* period = */ period.toLong(DurationUnit.MILLISECONDS),
         )
+            ?.apply { isRunning = true }
     }
 
     override fun stop() {
         timer?.cancel()
         timer = null
+        isRunning = false
     }
 }

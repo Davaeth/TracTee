@@ -4,7 +4,8 @@ import com.davaeth.tractee.android.ui.timeDashboard.TimeDashboardViewModel
 import com.davaeth.tractee.domain.Mapper
 import com.davaeth.tractee.domain.mappers.ReschedulingTimerMapper
 import com.davaeth.tractee.domain.useCases.CreateTimerUseCase
-import com.davaeth.tractee.domain.useCases.RetrieveTimersUseCase
+import com.davaeth.tractee.domain.useCases.DeleteTimerUseCase
+import com.davaeth.tractee.domain.useCases.ListenForTimersUseCase
 import com.davaeth.tractee.domain.useCases.UpdateTimerUseCase
 import com.davaeth.tractee.repository.DriverFactory
 import com.davaeth.tractee.repository.timer.TimerManager
@@ -25,8 +26,9 @@ val domainMappersModule = module {
 
 val domainUseCasesModule = module {
     factory { CreateTimerUseCase(get()) }
-    factory { RetrieveTimersUseCase(get(), get()) }
+    factory { ListenForTimersUseCase(get(), get()) }
     factory { UpdateTimerUseCase(get()) }
+    factory { DeleteTimerUseCase(get()) }
 }
 
 val uiModule = module {
