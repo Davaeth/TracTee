@@ -12,4 +12,7 @@ fun Duration.toDisplayable(): String {
     return "$hours:$minutes:$seconds"
 }
 
-fun Double.toDuration() = toDuration(DurationUnit.MILLISECONDS)
+fun Long.toDuration() = toDuration(DurationUnit.MILLISECONDS)
+
+val Duration.value
+    get() = inWholeMilliseconds

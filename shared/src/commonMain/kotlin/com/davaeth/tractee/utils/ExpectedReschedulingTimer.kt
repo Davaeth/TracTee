@@ -4,12 +4,15 @@ import com.davaeth.tractee.domain.common.Id
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-interface ExpectedReschedulingTimer<T> {
-    var timer: T?
-    val id: Id
-    val currentTime: Duration
+abstract class ExpectedReschedulingTimer<T> {
+    protected abstract var timer: T?
+    abstract val id: Id
+    abstract val currentTime: Duration
 
-    fun schedule(period: Duration = 1.seconds, action: (ExpectedReschedulingTimer<T>) -> Unit)
+    abstract fun schedule(
+        period: Duration = 1.seconds,
+        action: (ExpectedReschedulingTimer<T>) -> Unit,
+    )
 
-    fun stop()
+    abstract fun stop()
 }

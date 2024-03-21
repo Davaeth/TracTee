@@ -11,7 +11,7 @@ class TimerManager(private val driverFactory: DriverFactory) {
     suspend fun insertTimer() =
         withContext(Dispatchers.IO) {
             val database = createDatabase(driverFactory)
-            database.timerQueries.insertTimer(0.0, null)
+            database.timerQueries.insertTimer(0, null)
         }
 
     suspend fun getNewestTimer(): Result<TimerEntity> = withContext(Dispatchers.IO) {
@@ -28,4 +28,12 @@ class TimerManager(private val driverFactory: DriverFactory) {
                 .executeAsList()
         }
     }
+
+    suspend fun updateTimer(time: Long, title: String, id: Long): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val database = createDatabase(driverFactory)
+                database.timerQueries.updateTimer(time, title, id.toString())
+            }
+        }
 }

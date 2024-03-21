@@ -8,7 +8,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
-class ReschedulingTimer(id: Id, currentTime: Duration) : ExpectedReschedulingTimer<Timer> {
+class ReschedulingTimer(id: Id, currentTime: Duration) : ExpectedReschedulingTimer<Timer>() {
     override val id: Id
     override var timer: Timer? = null
     override var currentTime: Duration = Duration.ZERO

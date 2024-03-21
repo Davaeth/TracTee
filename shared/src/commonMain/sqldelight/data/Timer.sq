@@ -1,6 +1,6 @@
 CREATE TABLE TimerEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    time REAL NOT NULL,
+    time INTEGER NOT NULL,
     title TEXT
 );
 
@@ -17,3 +17,8 @@ LIMIT 1;
 retrieveTimers:
 SELECT *
 FROM TimerEntity;
+
+updateTimer:
+UPDATE TimerEntity
+SET time = ?, title = ?
+WHERE id LIKE ?;

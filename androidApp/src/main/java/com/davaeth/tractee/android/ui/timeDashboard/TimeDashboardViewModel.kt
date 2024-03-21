@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.davaeth.tractee.domain.common.Id
 import com.davaeth.tractee.domain.useCases.CreateTimerUseCase
 import com.davaeth.tractee.domain.useCases.RetrieveTimersUseCase
+import com.davaeth.tractee.domain.useCases.UpdateTimerUseCase
 import com.davaeth.tractee.utils.ExpectedReschedulingTimer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import java.util.Timer
 class TimeDashboardViewModel(
     private val createTimerUseCase: CreateTimerUseCase,
     private val retrieveTimersUseCase: RetrieveTimersUseCase,
+    private val updateTimerUseCase: UpdateTimerUseCase,
 ) : ViewModel(), TimeDashboardState {
     private val timers = mutableStateListOf<ExpectedReschedulingTimer<Timer>>()
 
@@ -47,7 +49,13 @@ class TimeDashboardViewModel(
     override fun startTimer(timerId: Id) {
         timers
             .first { it.id == timerId }
-            .schedule { timer -> timers.update(timerId, timer) }
+            .schedule { timer ->
+                timers.update(timerId, timer)
+                viewModelScope.launch {
+                    updateTimerUseCase(timer)
+                        .onFailure { /* Failure handling */ }
+                }
+            }
     }
 
     override fun stopTimer(timerId: Id) {

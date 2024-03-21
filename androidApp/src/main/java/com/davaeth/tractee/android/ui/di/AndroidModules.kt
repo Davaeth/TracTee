@@ -5,6 +5,7 @@ import com.davaeth.tractee.domain.Mapper
 import com.davaeth.tractee.domain.mappers.ReschedulingTimerMapper
 import com.davaeth.tractee.domain.useCases.CreateTimerUseCase
 import com.davaeth.tractee.domain.useCases.RetrieveTimersUseCase
+import com.davaeth.tractee.domain.useCases.UpdateTimerUseCase
 import com.davaeth.tractee.repository.DriverFactory
 import com.davaeth.tractee.repository.timer.TimerManager
 import com.davaeth.tractee.utils.ExpectedReschedulingTimer
@@ -25,6 +26,7 @@ val domainMappersModule = module {
 val domainUseCasesModule = module {
     factory { CreateTimerUseCase(get()) }
     factory { RetrieveTimersUseCase(get(), get()) }
+    factory { UpdateTimerUseCase(get()) }
 }
 
 val uiModule = module {
