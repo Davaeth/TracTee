@@ -46,8 +46,14 @@ fun TimeDashboard(viewModel: TimeDashboardViewModel = koinViewModel()) {
                 .align(Alignment.Center)
         ) {
             items(items = stateListener.timers.reversed(), key = { it.id.value }) { timer ->
+                val actualTimer =
+                    if (timer.id == stateListener.currentTimer?.id)
+                        stateListener.currentTimer
+                    else
+                        timer
+
                 SingleTimer(
-                    timer = timer,
+                    timer = actualTimer,
                     startTimer = viewModel::startTimer,
                     stopTimer = viewModel::stopTimer,
                     deleteTimer = viewModel::deleteTimer
@@ -89,11 +95,19 @@ private fun SingleTimer(
                 contentDescription = stringResource(id = R.string.a11y_single_timer_play)
             )
         }
-        IconButton(onClick = { stopTimer(timer.id) }) {
-            Icon(
-                imageVector = Icons.Filled.Clear,
-                contentDescription = stringResource(id = R.string.a11y_single_timer_stop)
-            )
-        }
+        if (timer.isRunning)
+            IconButton(onClick = { stopTimer(timer.id) }) {
+                Icon(
+                    imageVector = Icons.Filled.Clear,
+                    contentDescription = stringResource(id = R.string.a11y_single_timer_stop)
+                )
+            }
+        else
+            IconButton(onClick = { deleteTimer(timer.id) }) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = stringResource(id = R.string.a11y_single_timer_delete)
+                )
+            }
     }
 }

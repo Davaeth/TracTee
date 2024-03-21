@@ -8,6 +8,7 @@ abstract class ExpectedReschedulingTimer<T> {
     protected abstract var timer: T?
     abstract val id: Id
     abstract val currentTime: Duration
+    abstract val isRunning: Boolean
 
     abstract fun schedule(
         period: Duration = 1.seconds,

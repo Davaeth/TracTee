@@ -8,9 +8,12 @@ import com.davaeth.tractee.utils.ExpectedReschedulingTimer
 import java.util.Timer
 
 interface TimeDashboardState : ComposeState<TimeDashboardState.State> {
-    data class State(val timers: SnapshotStateList<ExpectedReschedulingTimer<Timer>>) {
+    data class State(
+        val timers: SnapshotStateList<ExpectedReschedulingTimer<Timer>>,
+        val currentTimer: ExpectedReschedulingTimer<Timer>?,
+    ) {
         companion object {
-            fun createInitial() = State(mutableStateListOf())
+            fun createInitial() = State(mutableStateListOf(), null)
         }
     }
 

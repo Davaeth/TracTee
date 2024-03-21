@@ -12,6 +12,7 @@ class ReschedulingTimer(id: Id, currentTime: Duration) : ExpectedReschedulingTim
     override val id: Id
     override var timer: Timer? = null
     override var currentTime: Duration = Duration.ZERO
+    override var isRunning: Boolean = false
 
     init {
         this.id = id

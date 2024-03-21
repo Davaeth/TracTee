@@ -25,10 +25,15 @@ class TimeDashboardViewModel(
     private val updateTimerUseCase: UpdateTimerUseCase,
     private val deleteTimerUseCase: DeleteTimerUseCase,
 ) : ViewModel(), TimeDashboardState {
-    private val currentTimer = mutableStateOf<ExpectedReschedulingTimer<Timer>?>(null)
     private val timers = mutableStateListOf<ExpectedReschedulingTimer<Timer>>()
+    private val currentTimer = mutableStateOf<ExpectedReschedulingTimer<Timer>?>(null)
 
-    private val _state = snapshotFlow { TimeDashboardState.State(timers = timers) }
+    private val _state = snapshotFlow {
+        TimeDashboardState.State(
+            timers = timers,
+            currentTimer = currentTimer.value
+        )
+    }
     override val state: StateFlow<TimeDashboardState.State> = _state.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
@@ -54,6 +59,7 @@ class TimeDashboardViewModel(
     }
 
     override fun startTimer(timerId: Id) {
+        currentTimer.value?.let { stopTimer(it.id) }
         currentTimer.value = timers.first { it.id == timerId }
         currentTimer.value?.schedule { timer ->
             viewModelScope.launch {
